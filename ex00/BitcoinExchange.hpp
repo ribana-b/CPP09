@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 18:05:44 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/16 00:50:26 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/17 00:34:58 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,26 +40,86 @@ class BitcoinExchange
 		class CouldNotOpenFileException : public std::exception
 		{
 			public:
+				CouldNotOpenFileException(const std::string& filename);
+				virtual ~CouldNotOpenFileException() throw();
 				const char*	what() const throw();
+
+			private:
+				std::string	m_Message;
 		};
 
 		class InvalidFormatException : public std::exception
 		{
 			public:
+				InvalidFormatException(const std::string& expected, const std::string& got);
+				virtual ~InvalidFormatException() throw();
+				const char*	what() const throw();
+
+			private:
+				std::string	m_Message;
+		};
+
+		class EmptyDatabaseException : public std::exception
+		{
+			public:
 				const char*	what() const throw();
 		};
 
+		class InvalidDateException : public std::exception
+		{
+			public:
+				InvalidDateException(const std::string& expected, const std::string& got);
+				virtual ~InvalidDateException() throw();
+				const char*	what() const throw();
+
+			private:
+				std::string	m_Message;
+		};
+
+		class RepeatedDateException : public std::exception
+		{
+			public:
+				RepeatedDateException(const std::string& date);
+				virtual ~RepeatedDateException() throw();
+				const char*	what() const throw();
+
+			private:
+				std::string	m_Message;
+		};
+
+		class LowDateException : public std::exception
+		{
+			public:
+				LowDateException(const std::tm* expected, const std::tm* got);
+				virtual ~LowDateException() throw();
+				const char*	what() const throw();
+
+			private:
+				std::string m_Message;
+		};
+
 		class InvalidNumberException : public std::exception
+		{
+			public:
+				InvalidNumberException(const std::string& expected, const std::string& got);
+				virtual ~InvalidNumberException() throw();
+				const char*	what() const throw();
+
+			private:
+				std::string m_Message;
+		};
+
+		class EmptyNumberException : public std::exception
 		{
 			public:
 				const char*	what() const throw();
 		};
 
 	private:
-		const static std::string m_DefaultDatabasename;
-
-		const std::string m_DatabaseName;
-		std::map<std::time_t, double> m_Database;
+		const static std::string		m_DefaultDatabaseName;
+		const std::string				m_DatabaseName;
+		std::map<std::time_t, double>	m_Database;
+		bool							m_IsDatabaseLoaded;
 
 		char								getSeparator(const std::string& filename) const;
 		std::pair<std::string, std::string>	getPairFromLine(const std::string& line, const char separator) const;

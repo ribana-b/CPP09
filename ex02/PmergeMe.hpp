@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 10:33:03 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/24 22:27:05 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/28 23:52:29 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ class PmergeMe
 		void	setTimerFlag(const bool value);
 		double	getTimer() const;
 
-		std::vector<int>	convertInput(const std::string& input);
+		static std::vector<int>	getVectorFromInput(const std::string& input);
 
 		void	sort(std::vector<int>& sequence);
 		void	sort(std::deque<int>& sequence);
@@ -68,6 +68,7 @@ class PmergeMe
 		bool				m_IsTimerFlagSet;
 		double				m_Timer;
 
+		static int	getValue(std::string& value);
 		static bool compare(VecIterator left, VecIterator right);
 		VecIterator	next(VecIterator it, std::size_t n) const;
 		Pair::iterator	next(Pair::iterator it, std::size_t n) const;

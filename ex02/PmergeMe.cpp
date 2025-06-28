@@ -6,15 +6,17 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 10:32:08 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/24 22:31:06 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/28 23:51:49 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 #include <algorithm>	// For std::upper_bound
 #include <iostream>		// For std::cout
+#include <limits>		// For std::numeric_limits
 #include <vector>		// For std::vector
 #include <ctime>		// For std::clock_t, std::clock
+#include <sstream>		// For std::stringstream
 
 // Helper macro to turn off OCF messages
 #ifdef QUIET
@@ -216,11 +218,73 @@ void	PmergeMe::mergeInsertSort(std::vector<Int>& sequence, const std::size_t lev
 	}
 }
 
-std::vector<int>	getVectorFromInput(const std::string&)
+int	PmergeMe::getValue(std::string& value)
 {
-	// TODO(srvariable): Parse input
-	std::vector<int> result;
+	if (value.size() == 0)
+	{
+		throw (std::exception()); // TODO(srvariable): EmptyNumberException
+	}
+	std::size_t i = 0;
+	if (value.size() > 1)
+	{
+		while (value[i] == '0' && value[i + 1] == '0')
+		{
+			++i;
+		}
+	}
+	value.erase(0, i);
+	if (value.size() > 12)
+	{
+		throw (std::exception()); // TODO(srvariable): OutOfBoundsException(0-2147483647)
+	}
+	const std::string validChars = "0123456789";
+	for (std::size_t i = 0; i < value.size(); ++i)
+	{
+		if (validChars.find(value[i]) == std::string::npos)
+		{
+			throw (std::exception());
+		}
+	}
+	long int convertedValue = std::atol(value.c_str());
+	if (convertedValue > std::numeric_limits<int>::max())
+	{
+		throw (std::exception()); // TODO(srvariable): OutOfBoundsException(0-2147483647)
+	}
 
+	return (convertedValue);
+}
+
+std::vector<int>	PmergeMe::getVectorFromInput(const std::string& input)
+{
+	std::vector<int> result;
+	std::stringstream ss(input);
+	std::string value;
+
+	ss >> value;
+	while (!ss.eof())
+	{
+		std::size_t start = input.find_first_not_of(" ");
+		if (start != std::string::npos)
+		{
+			value.erase(0, start);
+			std::size_t end = value.find_last_not_of(" ");
+			value.erase(end + 1);
+		}
+		try
+		{
+			int convertedValue = getValue(value);
+			if (std::find(result.begin(), result.end(), convertedValue) != result.end())
+			{
+				throw (std::exception()); // TODO(srvariable): RepeatedValueException()
+			}
+			result.push_back(convertedValue);
+		}
+		catch (const std::exception& e)
+		{
+			throw;
+		}
+		ss >> value;
+	}
 	return (result);
 }
 

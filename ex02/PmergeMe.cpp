@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 10:32:08 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/28 23:51:49 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/29 01:19:21 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <iostream>		// For std::cout
 #include <limits>		// For std::numeric_limits
 #include <vector>		// For std::vector
+#include <deque>		// For std::deque
 #include <ctime>		// For std::clock_t, std::clock
 #include <sstream>		// For std::stringstream
 
@@ -68,7 +69,12 @@ PmergeMe&	PmergeMe::operator=(const PmergeMe& that)
 	return (*this);
 }
 
-bool PmergeMe::compare(VecIterator left, VecIterator right)
+bool PmergeMe::compareVec(VecIterator left, VecIterator right)
+{
+	return (*left < *right);
+}
+
+bool PmergeMe::compareDeq(DeqIterator left, DeqIterator right)
 {
 	return (*left < *right);
 }
@@ -79,7 +85,19 @@ PmergeMe::VecIterator	PmergeMe::next(VecIterator it, std::size_t n) const
 	return (it);
 }
 
-PmergeMe::Pair::iterator	PmergeMe::next(Pair::iterator it, std::size_t n) const
+PmergeMe::VecPair::iterator	PmergeMe::next(VecPair::iterator it, std::size_t n) const
+{
+	std::advance(it, n);
+	return (it);
+}
+
+PmergeMe::DeqIterator	PmergeMe::next(DeqIterator it, std::size_t n) const
+{
+	std::advance(it, n);
+	return (it);
+}
+
+PmergeMe::DeqPair::iterator	PmergeMe::next(DeqPair::iterator it, std::size_t n) const
 {
 	std::advance(it, n);
 	return (it);
@@ -97,6 +115,18 @@ void	PmergeMe::swapPairs(VecIterator& currentPair, const std::size_t level) cons
 	}
 }
 
+void	PmergeMe::swapPairs(DeqIterator& currentPair, const std::size_t level) const
+{
+	DeqIterator start = next(currentPair, -level + 1);
+	DeqIterator end = next(start, level);
+
+	while (start != end)
+	{
+		std::iter_swap(start, next(start, level));
+		++start;
+	}
+}
+
 void	PmergeMe::sortPairs(std::vector<Int>& sequence, const std::size_t level, const std::size_t nPairs, const bool isOdd) const
 {
 	VecIterator start = sequence.begin();
@@ -106,14 +136,30 @@ void	PmergeMe::sortPairs(std::vector<Int>& sequence, const std::size_t level, co
 	{
 		VecIterator currentPair = next(it, level - 1);
 		VecIterator nextPair = next(it, 2 * level - 1);
-		if (compare(nextPair, currentPair))
+		if (compareVec(nextPair, currentPair))
 		{
 			swapPairs(currentPair, level);
 		}
 	}
 }
 
-void	PmergeMe::customBinaryInsert(Pair& mainChain, Pair& pendingChain) const
+void	PmergeMe::sortPairs(std::deque<Int>& sequence, const std::size_t level, const std::size_t nPairs, const bool isOdd) const
+{
+	DeqIterator start = sequence.begin();
+	DeqIterator end = next(next(start, nPairs * level), isOdd * -level);
+
+	for (DeqIterator it = start; it != end; std::advance(it, 2 * level))
+	{
+		DeqIterator currentPair = next(it, level - 1);
+		DeqIterator nextPair = next(it, 2 * level - 1);
+		if (compareDeq(nextPair, currentPair))
+		{
+			swapPairs(currentPair, level);
+		}
+	}
+}
+
+void	PmergeMe::customBinaryInsert(VecPair& mainChain, VecPair& pendingChain) const
 {
 	std::size_t previous = JACOBSTHAL_NUMBERS[0];
 	std::size_t nInserts = 0;
@@ -128,14 +174,49 @@ void	PmergeMe::customBinaryInsert(Pair& mainChain, Pair& pendingChain) const
 			break;
 		}
 
-		std::vector<VecIterator>::iterator pendingIt = next(pendingChain.begin(), diff - 1);
-		std::vector<VecIterator>::iterator boundIt = next(mainChain.begin(), current + nInserts);
+		VecPair::iterator pendingIt = next(pendingChain.begin(), diff - 1);
+		VecPair::iterator boundIt = next(mainChain.begin(), current + nInserts);
 		std::size_t offset = 0;
 
 		for (std::size_t j = 0; j < diff; ++j)
 		{
-			Pair::iterator upperIt = std::upper_bound(mainChain.begin(), boundIt, *pendingIt, compare);
-			Pair::iterator insertIt = mainChain.insert(upperIt, *pendingIt);
+			VecPair::iterator upperIt = std::upper_bound(mainChain.begin(), boundIt, *pendingIt, compareVec);
+			VecPair::iterator insertIt = mainChain.insert(upperIt, *pendingIt);
+			pendingIt = pendingChain.erase(pendingIt);
+			std::advance(pendingIt, -1);
+			
+			offset += static_cast<std::size_t>(insertIt - mainChain.begin()) == current + nInserts;
+			boundIt = next(mainChain.begin(), current + nInserts - offset);
+		}
+
+		previous = current;
+		nInserts += diff;
+	}
+}
+
+void	PmergeMe::customBinaryInsert(DeqPair& mainChain, DeqPair& pendingChain) const
+{
+	std::size_t previous = JACOBSTHAL_NUMBERS[0];
+	std::size_t nInserts = 0;
+
+	for (std::size_t i = 1; i < JACOBSTHAL_NUMBERS_SIZE; ++i)
+	{
+		std::size_t current = JACOBSTHAL_NUMBERS[i];
+		const std::size_t diff = current - previous;
+
+		if (diff > pendingChain.size())
+		{
+			break;
+		}
+
+		DeqPair::iterator pendingIt = next(pendingChain.begin(), diff - 1);
+		DeqPair::iterator boundIt = next(mainChain.begin(), current + nInserts);
+		std::size_t offset = 0;
+
+		for (std::size_t j = 0; j < diff; ++j)
+		{
+			DeqPair::iterator upperIt = std::upper_bound(mainChain.begin(), boundIt, *pendingIt, compareDeq);
+			DeqPair::iterator insertIt = mainChain.insert(upperIt, *pendingIt);
 			pendingIt = pendingChain.erase(pendingIt);
 			std::advance(pendingIt, -1);
 			
@@ -190,7 +271,7 @@ void	PmergeMe::mergeInsertSort(std::vector<Int>& sequence, const std::size_t lev
 		std::vector<VecIterator>::iterator currentPending = next(pendingChain.begin(), i);
 		std::size_t boundIndex = mainChain.size() - pendingChain.size() + i + isOdd;
 		std::vector<VecIterator>::iterator currentBound = next(mainChain.begin(), boundIndex);
-		std::vector<VecIterator>::iterator index = std::upper_bound(mainChain.begin(), currentBound, *currentPending, compare);
+		std::vector<VecIterator>::iterator index = std::upper_bound(mainChain.begin(), currentBound, *currentPending, compareVec);
 		mainChain.insert(index, *currentPending);
 	}
 
@@ -209,6 +290,75 @@ void	PmergeMe::mergeInsertSort(std::vector<Int>& sequence, const std::size_t lev
 
 	VecIterator sequenceIt = sequence.begin();
 	std::vector<Int>::iterator tempIt = temp.begin();
+
+	while (tempIt != temp.end())
+	{
+		*sequenceIt = *tempIt;
+		++sequenceIt;
+		++tempIt;
+	}
+}
+
+void	PmergeMe::mergeInsertSort(std::deque<Int>& sequence, const std::size_t level) const
+{
+	const std::size_t nPairs = sequence.size() / level;
+
+	if (nPairs < 2)
+	{
+		return;
+	}
+
+	const bool isOdd = nPairs % 2 != 0;
+
+	sortPairs(sequence, level, nPairs, isOdd);
+
+	mergeInsertSort(sequence, 2 * level);
+
+	std::deque<DeqIterator> mainChain;
+	std::deque<DeqIterator> pendingChain;
+
+	mainChain.push_back(next(sequence.begin(), level - 1));
+	mainChain.push_back(next(sequence.begin(), 2 * level - 1));
+
+	for (std::size_t i = 4; i <= nPairs; i += 2)
+	{
+		mainChain.push_back(next(sequence.begin(), i * level - 1));
+		pendingChain.push_back(next(sequence.begin(), (i - 1) * level - 1));
+	}
+
+	if (isOdd)
+	{
+		DeqIterator last = next(sequence.begin(), nPairs * level);
+		DeqIterator end = next(last, isOdd * -level);
+
+		pendingChain.push_back(next(end, level - 1));
+	}
+
+	customBinaryInsert(mainChain, pendingChain);
+
+	for (long int i = pendingChain.size() - 1; i >= 0; --i)
+	{
+		std::deque<DeqIterator>::iterator currentPending = next(pendingChain.begin(), i);
+		std::size_t boundIndex = mainChain.size() - pendingChain.size() + i + isOdd;
+		std::deque<DeqIterator>::iterator currentBound = next(mainChain.begin(), boundIndex);
+		std::deque<DeqIterator>::iterator index = std::upper_bound(mainChain.begin(), currentBound, *currentPending, compareDeq);
+		mainChain.insert(index, *currentPending);
+	}
+
+	std::deque<Int> temp;
+
+	for (std::deque<DeqIterator>::iterator it = mainChain.begin(); it != mainChain.end(); ++it)
+	{
+		for (std::size_t i = 0; i < level; ++i)
+		{
+			DeqIterator start = *it;
+			std::advance(start, -level + i + 1);
+			temp.push_back(*start);
+		}
+	}
+
+	DeqIterator sequenceIt = sequence.begin();
+	std::deque<Int>::iterator tempIt = temp.begin();
 
 	while (tempIt != temp.end())
 	{
@@ -324,9 +474,30 @@ void	PmergeMe::sort(std::vector<int>& sequence)
 	}
 }
 
-void	PmergeMe::sort(std::deque<int>&)
+void	PmergeMe::sort(std::deque<int>& sequence)
 {
-	// TODO(srvariable): Implement MIS for std::deque
+	std::deque<Int> newSequence(sequence.begin(), sequence.end());
+
+	if (m_IsTimerFlagSet)
+	{
+		std::clock_t start = std::clock();
+		mergeInsertSort(newSequence, 1);
+		std::clock_t end = std::clock();
+		m_Timer = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	}
+	else
+	{
+		mergeInsertSort(newSequence, 1);
+	}
+
+	std::deque<Int>::iterator newSequenceIt = newSequence.begin();
+	std::deque<int>::iterator sequenceIt = sequence.begin();
+	while (newSequenceIt != newSequence.end())
+	{
+		*sequenceIt = *newSequenceIt;
+		++sequenceIt;
+		++newSequenceIt;
+	}
 }
 
 void	PmergeMe::sort(std::list<int>&)

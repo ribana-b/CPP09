@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 10:33:03 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/29 01:12:46 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/29 07:14:21 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@
 /* |                            Include Section                             | */
 /* @------------------------------------------------------------------------@ */
 
-#include <list>		// For std::list
-#include <vector>	// For std::vector
-#include <deque>	// For std::deque
-#include <list>		// For std::list
-#include <string>	// For std::string
+#include <list>			// For std::list
+#include <vector>		// For std::vector
+#include <deque>		// For std::deque
+#include <list>			// For std::list
+#include <string>		// For std::string
+#include <exception>	// For std::exception
 
 /* @------------------------------------------------------------------------@ */
 /* |                             Class Section                              | */
@@ -67,6 +68,9 @@ class PmergeMe
 		typedef std::deque<Int>::iterator	DeqIterator;
 		typedef std::deque<DeqIterator>		DeqPair;
 
+		typedef std::list<Int>::iterator	LstIterator;
+		typedef std::list<LstIterator>		LstPair;
+
 	private:
 		bool	m_IsTimerFlagSet;
 		double	m_Timer;
@@ -88,6 +92,37 @@ class PmergeMe
 		void				sortPairs(std::deque<Int>& sequence, const std::size_t level, const std::size_t nPairs, const bool isOdd) const;
 		void				customBinaryInsert(DeqPair& mainChain, DeqPair& pendingChain) const;
 		void				mergeInsertSort(std::deque<Int>& sequence, const std::size_t level) const;
+
+		static bool			compareLst(LstIterator left, LstIterator right);
+		LstIterator			next(LstIterator it, std::size_t n) const;
+		LstPair::iterator	next(LstPair::iterator it, std::size_t n) const;
+		void				swapPairs(LstIterator& currentPair, const std::size_t level) const;
+		void				sortPairs(std::list<Int>& sequence, const std::size_t level, const std::size_t nPairs, const bool isOdd) const;
+		void				customBinaryInsert(LstPair& mainChain, LstPair& pendingChain) const;
+		void				mergeInsertSort(std::list<Int>& sequence, const std::size_t level) const;
+
+		class EmptyNumberException : public std::exception
+		{
+			public:
+				const char*	what() const throw();
+		};
+
+		class InvalidNumberException : public std::exception
+		{
+			public:
+				const char*	what() const throw();
+		};
+
+		class RepeatedNumberException : public std::exception
+		{
+			public:
+				RepeatedNumberException(const int number);
+				virtual ~RepeatedNumberException() throw();
+				const char*	what() const throw();
+
+			private:
+				std::string m_Message;
+		};
 };
 
 #endif

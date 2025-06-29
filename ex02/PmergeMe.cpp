@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 10:32:08 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/29 01:19:21 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/29 07:14:13 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,11 @@ bool PmergeMe::compareDeq(DeqIterator left, DeqIterator right)
 	return (*left < *right);
 }
 
+bool PmergeMe::compareLst(LstIterator left, LstIterator right)
+{
+	return (*left < *right);
+}
+
 PmergeMe::VecIterator	PmergeMe::next(VecIterator it, std::size_t n) const
 {
 	std::advance(it, n);
@@ -103,6 +108,18 @@ PmergeMe::DeqPair::iterator	PmergeMe::next(DeqPair::iterator it, std::size_t n) 
 	return (it);
 }
 
+PmergeMe::LstIterator	PmergeMe::next(LstIterator it, std::size_t n) const
+{
+	std::advance(it, n);
+	return (it);
+}
+
+PmergeMe::LstPair::iterator	PmergeMe::next(LstPair::iterator it, std::size_t n) const
+{
+	std::advance(it, n);
+	return (it);
+}
+
 void	PmergeMe::swapPairs(VecIterator& currentPair, const std::size_t level) const
 {
 	VecIterator start = next(currentPair, -level + 1);
@@ -119,6 +136,18 @@ void	PmergeMe::swapPairs(DeqIterator& currentPair, const std::size_t level) cons
 {
 	DeqIterator start = next(currentPair, -level + 1);
 	DeqIterator end = next(start, level);
+
+	while (start != end)
+	{
+		std::iter_swap(start, next(start, level));
+		++start;
+	}
+}
+
+void	PmergeMe::swapPairs(LstIterator& currentPair, const std::size_t level) const
+{
+	LstIterator start = next(currentPair, -level + 1);
+	LstIterator end = next(start, level);
 
 	while (start != end)
 	{
@@ -153,6 +182,22 @@ void	PmergeMe::sortPairs(std::deque<Int>& sequence, const std::size_t level, con
 		DeqIterator currentPair = next(it, level - 1);
 		DeqIterator nextPair = next(it, 2 * level - 1);
 		if (compareDeq(nextPair, currentPair))
+		{
+			swapPairs(currentPair, level);
+		}
+	}
+}
+
+void	PmergeMe::sortPairs(std::list<Int>& sequence, const std::size_t level, const std::size_t nPairs, const bool isOdd) const
+{
+	LstIterator start = sequence.begin();
+	LstIterator end = next(next(start, nPairs * level), isOdd * -level);
+
+	for (LstIterator it = start; it != end; std::advance(it, 2 * level))
+	{
+		LstIterator currentPair = next(it, level - 1);
+		LstIterator nextPair = next(it, 2 * level - 1);
+		if (compareLst(nextPair, currentPair))
 		{
 			swapPairs(currentPair, level);
 		}
@@ -221,6 +266,46 @@ void	PmergeMe::customBinaryInsert(DeqPair& mainChain, DeqPair& pendingChain) con
 			std::advance(pendingIt, -1);
 			
 			offset += static_cast<std::size_t>(insertIt - mainChain.begin()) == current + nInserts;
+			boundIt = next(mainChain.begin(), current + nInserts - offset);
+		}
+
+		previous = current;
+		nInserts += diff;
+	}
+}
+
+void	PmergeMe::customBinaryInsert(LstPair& mainChain, LstPair& pendingChain) const
+{
+	std::size_t previous = JACOBSTHAL_NUMBERS[0];
+	std::size_t nInserts = 0;
+
+	for (std::size_t i = 1; i < JACOBSTHAL_NUMBERS_SIZE; ++i)
+	{
+		std::size_t current = JACOBSTHAL_NUMBERS[i];
+		const std::size_t diff = current - previous;
+
+		if (diff > pendingChain.size())
+		{
+			break;
+		}
+
+		LstPair::iterator pendingIt = next(pendingChain.begin(), diff - 1);
+		LstPair::iterator boundIt = next(mainChain.begin(), current + nInserts);
+		std::size_t offset = 0;
+
+		for (std::size_t j = 0; j < diff; ++j)
+		{
+			LstPair::iterator upperIt = std::upper_bound(mainChain.begin(), boundIt, *pendingIt, compareLst);
+			LstPair::iterator insertIt = mainChain.insert(upperIt, *pendingIt);
+			pendingIt = pendingChain.erase(pendingIt);
+			std::advance(pendingIt, -1);
+			
+			std::size_t index = 0;
+			for (std::list<LstIterator>::iterator it = mainChain.begin(); it != insertIt; ++it)
+			{
+				++index;
+			}
+			offset += index == current + nInserts;
 			boundIt = next(mainChain.begin(), current + nInserts - offset);
 		}
 
@@ -368,11 +453,80 @@ void	PmergeMe::mergeInsertSort(std::deque<Int>& sequence, const std::size_t leve
 	}
 }
 
+void	PmergeMe::mergeInsertSort(std::list<Int>& sequence, const std::size_t level) const
+{
+	const std::size_t nPairs = sequence.size() / level;
+
+	if (nPairs < 2)
+	{
+		return;
+	}
+
+	const bool isOdd = nPairs % 2 != 0;
+
+	sortPairs(sequence, level, nPairs, isOdd);
+
+	mergeInsertSort(sequence, 2 * level);
+
+	std::list<LstIterator> mainChain;
+	std::list<LstIterator> pendingChain;
+
+	mainChain.push_back(next(sequence.begin(), level - 1));
+	mainChain.push_back(next(sequence.begin(), 2 * level - 1));
+
+	for (std::size_t i = 4; i <= nPairs; i += 2)
+	{
+		mainChain.push_back(next(sequence.begin(), i * level - 1));
+		pendingChain.push_back(next(sequence.begin(), (i - 1) * level - 1));
+	}
+
+	if (isOdd)
+	{
+		LstIterator last = next(sequence.begin(), nPairs * level);
+		LstIterator end = next(last, isOdd * -level);
+
+		pendingChain.push_back(next(end, level - 1));
+	}
+
+	customBinaryInsert(mainChain, pendingChain);
+
+	for (long int i = pendingChain.size() - 1; i >= 0; --i)
+	{
+		std::list<LstIterator>::iterator currentPending = next(pendingChain.begin(), i);
+		std::size_t boundIndex = mainChain.size() - pendingChain.size() + i + isOdd;
+		std::list<LstIterator>::iterator currentBound = next(mainChain.begin(), boundIndex);
+		std::list<LstIterator>::iterator index = std::upper_bound(mainChain.begin(), currentBound, *currentPending, compareLst);
+		mainChain.insert(index, *currentPending);
+	}
+
+	std::list<Int> temp;
+
+	for (std::list<LstIterator>::iterator it = mainChain.begin(); it != mainChain.end(); ++it)
+	{
+		for (std::size_t i = 0; i < level; ++i)
+		{
+			LstIterator start = *it;
+			std::advance(start, -level + i + 1);
+			temp.push_back(*start);
+		}
+	}
+
+	LstIterator sequenceIt = sequence.begin();
+	std::list<Int>::iterator tempIt = temp.begin();
+
+	while (tempIt != temp.end())
+	{
+		*sequenceIt = *tempIt;
+		++sequenceIt;
+		++tempIt;
+	}
+}
+
 int	PmergeMe::getValue(std::string& value)
 {
 	if (value.size() == 0)
 	{
-		throw (std::exception()); // TODO(srvariable): EmptyNumberException
+		throw (EmptyNumberException());
 	}
 	std::size_t i = 0;
 	if (value.size() > 1)
@@ -385,20 +539,20 @@ int	PmergeMe::getValue(std::string& value)
 	value.erase(0, i);
 	if (value.size() > 12)
 	{
-		throw (std::exception()); // TODO(srvariable): OutOfBoundsException(0-2147483647)
+		throw (InvalidNumberException());
 	}
 	const std::string validChars = "0123456789";
 	for (std::size_t i = 0; i < value.size(); ++i)
 	{
 		if (validChars.find(value[i]) == std::string::npos)
 		{
-			throw (std::exception());
+			throw (InvalidNumberException());
 		}
 	}
 	long int convertedValue = std::atol(value.c_str());
 	if (convertedValue > std::numeric_limits<int>::max())
 	{
-		throw (std::exception()); // TODO(srvariable): OutOfBoundsException(0-2147483647)
+		throw (InvalidNumberException());
 	}
 
 	return (convertedValue);
@@ -425,7 +579,7 @@ std::vector<int>	PmergeMe::getVectorFromInput(const std::string& input)
 			int convertedValue = getValue(value);
 			if (std::find(result.begin(), result.end(), convertedValue) != result.end())
 			{
-				throw (std::exception()); // TODO(srvariable): RepeatedValueException()
+				throw (RepeatedNumberException(convertedValue));
 			}
 			result.push_back(convertedValue);
 		}
@@ -500,9 +654,30 @@ void	PmergeMe::sort(std::deque<int>& sequence)
 	}
 }
 
-void	PmergeMe::sort(std::list<int>&)
+void	PmergeMe::sort(std::list<int>& sequence)
 {
-	// TODO(srvariable): Implement MIS for std::list
+	std::list<Int> newSequence(sequence.begin(), sequence.end());
+
+	if (m_IsTimerFlagSet)
+	{
+		std::clock_t start = std::clock();
+		mergeInsertSort(newSequence, 1);
+		std::clock_t end = std::clock();
+		m_Timer = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	}
+	else
+	{
+		mergeInsertSort(newSequence, 1);
+	}
+
+	std::list<Int>::iterator newSequenceIt = newSequence.begin();
+	std::list<int>::iterator sequenceIt = sequence.begin();
+	while (newSequenceIt != newSequence.end())
+	{
+		*sequenceIt = *newSequenceIt;
+		++sequenceIt;
+		++newSequenceIt;
+	}
 }
 
 std::size_t PmergeMe::Int::nComps = 0;
@@ -549,4 +724,28 @@ bool	PmergeMe::Int::operator<(const Int& that) const
 PmergeMe::Int::operator int() const
 {
 	return (m_Value);
+}
+
+const char*	PmergeMe::EmptyNumberException::what() const throw()
+{
+	return ("Empty number");
+}
+
+const char*	PmergeMe::InvalidNumberException::what() const throw()
+{
+	return ("Invalid number. Must be between 0 and 2147483647");
+}
+
+PmergeMe::RepeatedNumberException::RepeatedNumberException(const int number)
+{
+	std::stringstream ss;
+	ss << "Repeated number (" << number << ")";
+	m_Message = ss.str();
+}
+
+PmergeMe::RepeatedNumberException::~RepeatedNumberException() throw() {}
+
+const char*	PmergeMe::RepeatedNumberException::what() const throw()
+{
+	return (m_Message.c_str());
 }

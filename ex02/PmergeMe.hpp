@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 10:33:03 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/29 07:14:21 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/29 08:03:54 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ class PmergeMe
 		double	getTimer() const;
 
 		static std::vector<int>	getVectorFromInput(const std::string& input);
+		static std::deque<int>	getDequeFromInput(const std::string& input);
+		static std::list<int>	getListFromInput(const std::string& input);
 
 		void	sort(std::vector<int>& sequence);
 		void	sort(std::deque<int>& sequence);

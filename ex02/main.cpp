@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:14:04 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/29 07:15:45 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/29 08:04:53 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1821,23 +1821,6 @@ int main(int argc, char** argv)
 
 	std::size_t testIndex = 0;
 
-	std::string input;
-	for (int i = 1; i < argc; ++i)
-	{
-		input += argv[i];
-		input += " ";
-	}
-
-	try
-	{
-		std::vector<int> v = PmergeMe::getVectorFromInput(input);
-		testVectorSortFromParameters(testIndex++, v);
-	}
-	catch (const std::exception& e)
-	{
-		PP_EXCEPTION(e);
-	}
-
 	testVectorSortEmptyVector(testIndex++);
 	testVectorSortOneNumber(testIndex++);
 	testVectorSortTwoNumbers(testIndex++);
@@ -1864,6 +1847,30 @@ int main(int argc, char** argv)
 	testListSortFiveNumbers(testIndex++);
 	testListSortTenNumbers(testIndex++);
 	testListSortThreeThousandNumbers(testIndex++);
+
+	std::string input;
+	for (int i = 1; i < argc; ++i)
+	{
+		input += argv[i];
+		input += " ";
+	}
+
+	try
+	{
+		std::vector<int> v = PmergeMe::getVectorFromInput(input);
+		testVectorSortFromParameters(testIndex++, v);
+		// I could use d(v.begin(), v.end()), and same with l(v.begin(), v.end())
+		// but I would not be able to test the functions, although they should
+		// work the same way, but returning different containers.
+		std::deque<int> d = PmergeMe::getDequeFromInput(input);
+		testDequeSortFromParameters(testIndex++, d);
+		std::list<int> l = PmergeMe::getListFromInput(input);
+		testListSortFromParameters(testIndex++, l);
+	}
+	catch (const std::exception& e)
+	{
+		PP_EXCEPTION(e);
+	}
 
 	return (0);
 }

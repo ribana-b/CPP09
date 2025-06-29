@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 10:32:08 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/29 07:14:13 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/29 08:03:48 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,8 +329,8 @@ void	PmergeMe::mergeInsertSort(std::vector<Int>& sequence, const std::size_t lev
 
 	mergeInsertSort(sequence, 2 * level);
 
-	std::vector<VecIterator> mainChain;
-	std::vector<VecIterator> pendingChain;
+	VecPair mainChain;
+	VecPair pendingChain;
 
 	mainChain.push_back(next(sequence.begin(), level - 1));
 	mainChain.push_back(next(sequence.begin(), 2 * level - 1));
@@ -353,10 +353,10 @@ void	PmergeMe::mergeInsertSort(std::vector<Int>& sequence, const std::size_t lev
 
 	for (long int i = pendingChain.size() - 1; i >= 0; --i)
 	{
-		std::vector<VecIterator>::iterator currentPending = next(pendingChain.begin(), i);
+		VecPair::iterator currentPending = next(pendingChain.begin(), i);
 		std::size_t boundIndex = mainChain.size() - pendingChain.size() + i + isOdd;
-		std::vector<VecIterator>::iterator currentBound = next(mainChain.begin(), boundIndex);
-		std::vector<VecIterator>::iterator index = std::upper_bound(mainChain.begin(), currentBound, *currentPending, compareVec);
+		VecPair::iterator currentBound = next(mainChain.begin(), boundIndex);
+		VecPair::iterator index = std::upper_bound(mainChain.begin(), currentBound, *currentPending, compareVec);
 		mainChain.insert(index, *currentPending);
 	}
 
@@ -399,8 +399,8 @@ void	PmergeMe::mergeInsertSort(std::deque<Int>& sequence, const std::size_t leve
 
 	mergeInsertSort(sequence, 2 * level);
 
-	std::deque<DeqIterator> mainChain;
-	std::deque<DeqIterator> pendingChain;
+	DeqPair mainChain;
+	DeqPair pendingChain;
 
 	mainChain.push_back(next(sequence.begin(), level - 1));
 	mainChain.push_back(next(sequence.begin(), 2 * level - 1));
@@ -423,10 +423,10 @@ void	PmergeMe::mergeInsertSort(std::deque<Int>& sequence, const std::size_t leve
 
 	for (long int i = pendingChain.size() - 1; i >= 0; --i)
 	{
-		std::deque<DeqIterator>::iterator currentPending = next(pendingChain.begin(), i);
+		DeqPair::iterator currentPending = next(pendingChain.begin(), i);
 		std::size_t boundIndex = mainChain.size() - pendingChain.size() + i + isOdd;
-		std::deque<DeqIterator>::iterator currentBound = next(mainChain.begin(), boundIndex);
-		std::deque<DeqIterator>::iterator index = std::upper_bound(mainChain.begin(), currentBound, *currentPending, compareDeq);
+		DeqPair::iterator currentBound = next(mainChain.begin(), boundIndex);
+		DeqPair::iterator index = std::upper_bound(mainChain.begin(), currentBound, *currentPending, compareDeq);
 		mainChain.insert(index, *currentPending);
 	}
 
@@ -468,8 +468,8 @@ void	PmergeMe::mergeInsertSort(std::list<Int>& sequence, const std::size_t level
 
 	mergeInsertSort(sequence, 2 * level);
 
-	std::list<LstIterator> mainChain;
-	std::list<LstIterator> pendingChain;
+	LstPair mainChain;
+	LstPair pendingChain;
 
 	mainChain.push_back(next(sequence.begin(), level - 1));
 	mainChain.push_back(next(sequence.begin(), 2 * level - 1));
@@ -492,10 +492,10 @@ void	PmergeMe::mergeInsertSort(std::list<Int>& sequence, const std::size_t level
 
 	for (long int i = pendingChain.size() - 1; i >= 0; --i)
 	{
-		std::list<LstIterator>::iterator currentPending = next(pendingChain.begin(), i);
+		LstPair::iterator currentPending = next(pendingChain.begin(), i);
 		std::size_t boundIndex = mainChain.size() - pendingChain.size() + i + isOdd;
-		std::list<LstIterator>::iterator currentBound = next(mainChain.begin(), boundIndex);
-		std::list<LstIterator>::iterator index = std::upper_bound(mainChain.begin(), currentBound, *currentPending, compareLst);
+		LstPair::iterator currentBound = next(mainChain.begin(), boundIndex);
+		LstPair::iterator index = std::upper_bound(mainChain.begin(), currentBound, *currentPending, compareLst);
 		mainChain.insert(index, *currentPending);
 	}
 
@@ -561,6 +561,74 @@ int	PmergeMe::getValue(std::string& value)
 std::vector<int>	PmergeMe::getVectorFromInput(const std::string& input)
 {
 	std::vector<int> result;
+	std::stringstream ss(input);
+	std::string value;
+
+	ss >> value;
+	while (!ss.eof())
+	{
+		std::size_t start = input.find_first_not_of(" ");
+		if (start != std::string::npos)
+		{
+			value.erase(0, start);
+			std::size_t end = value.find_last_not_of(" ");
+			value.erase(end + 1);
+		}
+		try
+		{
+			int convertedValue = getValue(value);
+			if (std::find(result.begin(), result.end(), convertedValue) != result.end())
+			{
+				throw (RepeatedNumberException(convertedValue));
+			}
+			result.push_back(convertedValue);
+		}
+		catch (const std::exception& e)
+		{
+			throw;
+		}
+		ss >> value;
+	}
+	return (result);
+}
+
+std::deque<int>	PmergeMe::getDequeFromInput(const std::string& input)
+{
+	std::deque<int> result;
+	std::stringstream ss(input);
+	std::string value;
+
+	ss >> value;
+	while (!ss.eof())
+	{
+		std::size_t start = input.find_first_not_of(" ");
+		if (start != std::string::npos)
+		{
+			value.erase(0, start);
+			std::size_t end = value.find_last_not_of(" ");
+			value.erase(end + 1);
+		}
+		try
+		{
+			int convertedValue = getValue(value);
+			if (std::find(result.begin(), result.end(), convertedValue) != result.end())
+			{
+				throw (RepeatedNumberException(convertedValue));
+			}
+			result.push_back(convertedValue);
+		}
+		catch (const std::exception& e)
+		{
+			throw;
+		}
+		ss >> value;
+	}
+	return (result);
+}
+
+std::list<int>	PmergeMe::getListFromInput(const std::string& input)
+{
+	std::list<int> result;
 	std::stringstream ss(input);
 	std::string value;
 

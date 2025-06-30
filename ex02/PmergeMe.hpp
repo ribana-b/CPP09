@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 10:33:03 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/29 08:03:54 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/30 13:35:43 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,13 +106,13 @@ class PmergeMe
 		class EmptyNumberException : public std::exception
 		{
 			public:
-				const char*	what() const throw();
+				virtual const char*	what() const throw();
 		};
 
 		class InvalidNumberException : public std::exception
 		{
 			public:
-				const char*	what() const throw();
+				virtual const char*	what() const throw();
 		};
 
 		class RepeatedNumberException : public std::exception
@@ -120,7 +120,7 @@ class PmergeMe
 			public:
 				RepeatedNumberException(const int number);
 				virtual ~RepeatedNumberException() throw();
-				const char*	what() const throw();
+				virtual const char*	what() const throw();
 
 			private:
 				std::string m_Message;

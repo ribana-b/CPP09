@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:14:04 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/29 08:04:53 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/30 13:51:55 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1813,14 +1813,9 @@ void	testListSortThreeThousandNumbers(std::size_t testIndex)
 
 int main(int argc, char** argv)
 {
-	if (argc < 2)
-	{
-		std::cerr << "Usage: " << argv[0] << " NUMBERS..." << std::endl;
-		return (1);
-	}
-
 	std::size_t testIndex = 0;
 
+#ifdef RUN_TEST
 	testVectorSortEmptyVector(testIndex++);
 	testVectorSortOneNumber(testIndex++);
 	testVectorSortTwoNumbers(testIndex++);
@@ -1847,6 +1842,15 @@ int main(int argc, char** argv)
 	testListSortFiveNumbers(testIndex++);
 	testListSortTenNumbers(testIndex++);
 	testListSortThreeThousandNumbers(testIndex++);
+
+	return (0);
+#endif
+
+	if (argc < 2)
+	{
+		std::cerr << "Usage: " << argv[0] << " NUMBERS..." << std::endl;
+		return (1);
+	}
 
 	std::string input;
 	for (int i = 1; i < argc; ++i)

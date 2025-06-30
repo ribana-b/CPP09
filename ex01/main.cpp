@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:14:04 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/30 13:41:56 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/30 13:55:50 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,24 @@
 	<< ": Exception caught. Reason:\033[0m " << (exception).what() << std::endl;\
 } while(0)
 
-void	testNoNumberWithoutOperator(const std::size_t testIndex)
+void	testRPNFromParameters(const std::size_t testIndex, const std::string& input)
+{
+	PP_TEST(testIndex);
+
+	try
+	{
+		RPN rpn;
+		std::cout << "-----------------" << std::endl;
+		std::cout << "Input: " << input << std::endl;
+		std::cout << "Result: " << rpn.eval(input) << std::endl;
+	}
+	catch (const std::exception& e)
+	{
+		PP_EXCEPTION(e);
+	}
+}
+
+void	testRPNNoNumberWithoutOperator(const std::size_t testIndex)
 {
 	PP_TEST(testIndex);
 
@@ -45,7 +62,7 @@ void	testNoNumberWithoutOperator(const std::size_t testIndex)
 	}
 }
 
-void	testNoNumberWithOperator(const std::size_t testIndex)
+void	testRPNNoNumberWithOperator(const std::size_t testIndex)
 {
 	PP_TEST(testIndex);
 
@@ -62,7 +79,7 @@ void	testNoNumberWithOperator(const std::size_t testIndex)
 	}
 }
 
-void	testOneNumberWithoutOperator(const std::size_t testIndex)
+void	testRPNOneNumberWithoutOperator(const std::size_t testIndex)
 {
 	PP_TEST(testIndex);
 
@@ -79,7 +96,7 @@ void	testOneNumberWithoutOperator(const std::size_t testIndex)
 	}
 }
 
-void	testOneNumberWithOperator(const std::size_t testIndex)
+void	testRPNOneNumberWithOperator(const std::size_t testIndex)
 {
 	PP_TEST(testIndex);
 
@@ -96,7 +113,7 @@ void	testOneNumberWithOperator(const std::size_t testIndex)
 	}
 }
 
-void	testTwoNumbersWithoutOperator(const std::size_t testIndex)
+void	testRPNTwoNumbersWithoutOperator(const std::size_t testIndex)
 {
 	PP_TEST(testIndex);
 
@@ -113,7 +130,7 @@ void	testTwoNumbersWithoutOperator(const std::size_t testIndex)
 	}
 }
 
-void	testTwoNumbersWithOperator(const std::size_t testIndex)
+void	testRPNTwoNumbersWithOperator(const std::size_t testIndex)
 {
 	PP_TEST(testIndex);
 
@@ -130,7 +147,7 @@ void	testTwoNumbersWithOperator(const std::size_t testIndex)
 	}
 }
 
-void	testDivisionByZero(const std::size_t testIndex)
+void	testRPNDivisionByZero(const std::size_t testIndex)
 {
 	PP_TEST(testIndex);
 
@@ -147,7 +164,7 @@ void	testDivisionByZero(const std::size_t testIndex)
 	}
 }
 
-void	testMultipleCombinations(const std::size_t testIndex)
+void	testRPNMultipleCombinations(const std::size_t testIndex)
 {
 	PP_TEST(testIndex);
 
@@ -187,13 +204,9 @@ void	testMultipleCombinations(const std::size_t testIndex)
 
 int main(int argc, char** argv)
 {
-	if (argc < 2)
-	{
-		std::cerr << "Usage: " << argv[0] << " NUMBER [SYMBOL NUMBER]..." << std::endl;
-		return (1);
-	}
-
 	std::size_t testIndex = 0;
+
+#ifdef RUN_TEST
 	testNoNumberWithoutOperator(testIndex++);
 	testNoNumberWithOperator(testIndex++);
 	testOneNumberWithoutOperator(testIndex++);
@@ -202,6 +215,14 @@ int main(int argc, char** argv)
 	testTwoNumbersWithOperator(testIndex++);
 	testDivisionByZero(testIndex++);
 	testMultipleCombinations(testIndex++);
+	return (0);
+#endif
+
+	if (argc < 2)
+	{
+		std::cerr << "Usage: " << argv[0] << " NUMBER [SYMBOL NUMBER]..." << std::endl;
+		return (1);
+	}
 
 	std::string input;
 	for (int i = 1; i < argc; ++i)
@@ -210,17 +231,7 @@ int main(int argc, char** argv)
 		input += " ";
 	}
 
-	try
-	{
-		RPN rpn;
-		std::cout << "-----------------" << std::endl;
-		std::cout << "Input: " << input << std::endl;
-		std::cout << "Result: " << rpn.eval(input) << std::endl;
-	}
-	catch (const std::exception& e)
-	{
-		PP_EXCEPTION(e);
-	}
+	testRPNFromParameters(testIndex++, input);
 
 	return (0);
 }

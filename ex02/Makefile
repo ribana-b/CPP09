@@ -27,6 +27,10 @@ ifdef QUIET
 	CXXFLAGS += -DQUIET
 endif
 
+ifdef RUN_TEST
+	CXXFLAGS += -DRUN_TEST
+endif
+
 CPPFLAGS := -I $(INCLUDE_DIR)
 
 RM := rm -rf
@@ -52,7 +56,10 @@ re:
 quiet:
 	@$(MAKE) -s QUIET=1
 
-.PHONY: all clean fclean re quiet
+test:
+	@$(MAKE) -Bs RUN_TEST=1 QUIET=1
+
+.PHONY: all clean fclean re quiet test
 
 $(NAME): $(OBJ)
 	$(OBJ_MSG)

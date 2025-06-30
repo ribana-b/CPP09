@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 16:14:04 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/30 13:51:55 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/30 14:31:45 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	testVectorSortFromParameters(std::size_t testIndex, const std::vector<int> 
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<int> vec(vectorFromInput);
 
@@ -58,13 +58,20 @@ void	testVectorSortFromParameters(std::size_t testIndex, const std::vector<int> 
 			std::cout << *it << " ";
 		}
 		std::cout << std::endl;
+
+		if (!PmergeMe::isSorted(vec))
+		{
+			std::cerr << "\033[31;1mNOT SORTED!\033[0m" << std::endl;
+			return;
+		}
+
 		std::cout << "Size:        " << vec.size() << std::endl;
 		std::cout << "Time:        " << pm.getTimer() << std::endl;
 		std::cout << "Comparisons: " << PmergeMe::Int::nComps << std::endl;
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<PmergeMe::Int> vec(vectorFromInput.begin(), vectorFromInput.end());
 
@@ -84,12 +91,20 @@ void	testVectorSortFromParameters(std::size_t testIndex, const std::vector<int> 
 			std::cout << *it << " ";
 		}
 		std::cout << std::endl;
+
+		const int nComps = PmergeMe::Int::nComps;
+		if (!PmergeMe::isSorted(vec))
+		{
+			std::cerr << "\033[31;1mNOT SORTED!\033[0m" << std::endl;
+			return;
+		}
+
 		std::cout << std::fixed << std::setprecision(6);
 		double timer = static_cast<double>(end - start) / CLOCKS_PER_SEC;
 
 		std::cout << "Size:        " << vec.size() << std::endl;
 		std::cout << "Time:        " << timer << std::endl;
-		std::cout << "Comparisons: " << PmergeMe::Int::nComps << std::endl;
+		std::cout << "Comparisons: " << nComps << std::endl;
 	}
 }
 
@@ -100,7 +115,7 @@ void	testVectorSortEmptyVector(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<int> vec;
 
@@ -126,7 +141,7 @@ void	testVectorSortEmptyVector(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<PmergeMe::Int> vec;
 
@@ -167,7 +182,7 @@ void	testVectorSortOneNumber(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<int> vec(arr, arr + arrSize);
 
@@ -193,7 +208,7 @@ void	testVectorSortOneNumber(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<PmergeMe::Int> vec(arr, arr + arrSize);
 
@@ -234,7 +249,7 @@ void	testVectorSortTwoNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<int> vec(arr, arr + arrSize);
 
@@ -260,7 +275,7 @@ void	testVectorSortTwoNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<PmergeMe::Int> vec(arr, arr + arrSize);
 
@@ -301,7 +316,7 @@ void	testVectorSortThreeNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<int> vec(arr, arr + arrSize);
 
@@ -327,7 +342,7 @@ void	testVectorSortThreeNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<PmergeMe::Int> vec(arr, arr + arrSize);
 
@@ -368,7 +383,7 @@ void	testVectorSortFourNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<int> vec(arr, arr + arrSize);
 
@@ -394,7 +409,7 @@ void	testVectorSortFourNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<PmergeMe::Int> vec(arr, arr + arrSize);
 
@@ -435,7 +450,7 @@ void	testVectorSortFiveNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<int> vec(arr, arr + arrSize);
 
@@ -461,7 +476,7 @@ void	testVectorSortFiveNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<PmergeMe::Int> vec(arr, arr + arrSize);
 
@@ -502,7 +517,7 @@ void	testVectorSortTenNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<int> vec(arr, arr + arrSize);
 
@@ -528,7 +543,7 @@ void	testVectorSortTenNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<PmergeMe::Int> vec(arr, arr + arrSize);
 
@@ -569,7 +584,7 @@ void	testVectorSortThreeThousandNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<int> vec(arr, arr + arrSize);
 
@@ -595,7 +610,7 @@ void	testVectorSortThreeThousandNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::vector<PmergeMe::Int> vec(arr, arr + arrSize);
 
@@ -631,7 +646,7 @@ void	testDequeSortFromParameters(std::size_t testIndex, const std::deque<int> de
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<int> deq(dequeFromInput);
 
@@ -651,13 +666,20 @@ void	testDequeSortFromParameters(std::size_t testIndex, const std::deque<int> de
 			std::cout << *it << " ";
 		}
 		std::cout << std::endl;
+
+		if (!PmergeMe::isSorted(deq))
+		{
+			std::cerr << "\033[31;1mNOT SORTED!\033[0m" << std::endl;
+			return;
+		}
+
 		std::cout << "Size:        " << deq.size() << std::endl;
 		std::cout << "Time:        " << pm.getTimer() << std::endl;
 		std::cout << "Comparisons: " << PmergeMe::Int::nComps << std::endl;
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<PmergeMe::Int> deq(dequeFromInput.begin(), dequeFromInput.end());
 
@@ -677,12 +699,20 @@ void	testDequeSortFromParameters(std::size_t testIndex, const std::deque<int> de
 			std::cout << *it << " ";
 		}
 		std::cout << std::endl;
+
+		const int nComps = PmergeMe::Int::nComps;
+		if (!PmergeMe::isSorted(deq))
+		{
+			std::cerr << "\033[31;1mNOT SORTED!\033[0m" << std::endl;
+			return;
+		}
+
 		std::cout << std::fixed << std::setprecision(6);
 		double timer = static_cast<double>(end - start) / CLOCKS_PER_SEC;
 
 		std::cout << "Size:        " << deq.size() << std::endl;
 		std::cout << "Time:        " << timer << std::endl;
-		std::cout << "Comparisons: " << PmergeMe::Int::nComps << std::endl;
+		std::cout << "Comparisons: " << nComps << std::endl;
 	}
 }
 
@@ -693,7 +723,7 @@ void	testDequeSortEmptyDeque(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<int> deq;
 
@@ -719,7 +749,7 @@ void	testDequeSortEmptyDeque(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<PmergeMe::Int> deq;
 
@@ -760,7 +790,7 @@ void	testDequeSortOneNumber(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<int> deq(arr, arr + arrSize);
 
@@ -786,7 +816,7 @@ void	testDequeSortOneNumber(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<PmergeMe::Int> deq(arr, arr + arrSize);
 
@@ -827,7 +857,7 @@ void	testDequeSortTwoNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<int> deq(arr, arr + arrSize);
 
@@ -853,7 +883,7 @@ void	testDequeSortTwoNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<PmergeMe::Int> deq(arr, arr + arrSize);
 
@@ -894,7 +924,7 @@ void	testDequeSortThreeNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<int> deq(arr, arr + arrSize);
 
@@ -920,7 +950,7 @@ void	testDequeSortThreeNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<PmergeMe::Int> deq(arr, arr + arrSize);
 
@@ -961,7 +991,7 @@ void	testDequeSortFourNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<int> deq(arr, arr + arrSize);
 
@@ -987,7 +1017,7 @@ void	testDequeSortFourNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<PmergeMe::Int> deq(arr, arr + arrSize);
 
@@ -1028,7 +1058,7 @@ void	testDequeSortFiveNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<int> deq(arr, arr + arrSize);
 
@@ -1054,7 +1084,7 @@ void	testDequeSortFiveNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<PmergeMe::Int> deq(arr, arr + arrSize);
 
@@ -1095,7 +1125,7 @@ void	testDequeSortTenNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<int> deq(arr, arr + arrSize);
 
@@ -1121,7 +1151,7 @@ void	testDequeSortTenNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<PmergeMe::Int> deq(arr, arr + arrSize);
 
@@ -1162,7 +1192,7 @@ void	testDequeSortThreeThousandNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<int> deq(arr, arr + arrSize);
 
@@ -1188,7 +1218,7 @@ void	testDequeSortThreeThousandNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::deque<PmergeMe::Int> deq(arr, arr + arrSize);
 
@@ -1224,7 +1254,7 @@ void	testListSortFromParameters(std::size_t testIndex, const std::list<int> list
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<int> lst(listFromInput);
 
@@ -1244,13 +1274,20 @@ void	testListSortFromParameters(std::size_t testIndex, const std::list<int> list
 			std::cout << *it << " ";
 		}
 		std::cout << std::endl;
+
+		if (!PmergeMe::isSorted(lst))
+		{
+			std::cerr << "\033[31;1mNOT SORTED!\033[0m" << std::endl;
+			return;
+		}
+
 		std::cout << "Size:        " << lst.size() << std::endl;
 		std::cout << "Time:        " << pm.getTimer() << std::endl;
 		std::cout << "Comparisons: " << PmergeMe::Int::nComps << std::endl;
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<PmergeMe::Int> lst(listFromInput.begin(), listFromInput.end());
 
@@ -1270,12 +1307,20 @@ void	testListSortFromParameters(std::size_t testIndex, const std::list<int> list
 			std::cout << *it << " ";
 		}
 		std::cout << std::endl;
+
+		const int nComps = PmergeMe::Int::nComps;
+		if (!PmergeMe::isSorted(lst))
+		{
+			std::cerr << "\033[31;1mNOT SORTED!\033[0m" << std::endl;
+			return;
+		}
+
 		std::cout << std::fixed << std::setprecision(6);
 		double timer = static_cast<double>(end - start) / CLOCKS_PER_SEC;
 
 		std::cout << "Size:        " << lst.size() << std::endl;
 		std::cout << "Time:        " << timer << std::endl;
-		std::cout << "Comparisons: " << PmergeMe::Int::nComps << std::endl;
+		std::cout << "Comparisons: " << nComps << std::endl;
 	}
 }
 
@@ -1286,7 +1331,7 @@ void	testListSortEmptyList(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<int> lst;
 
@@ -1312,7 +1357,7 @@ void	testListSortEmptyList(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<PmergeMe::Int> lst;
 
@@ -1353,7 +1398,7 @@ void	testListSortOneNumber(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<int> lst(arr, arr + arrSize);
 
@@ -1379,7 +1424,7 @@ void	testListSortOneNumber(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<PmergeMe::Int> lst(arr, arr + arrSize);
 
@@ -1420,7 +1465,7 @@ void	testListSortTwoNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<int> lst(arr, arr + arrSize);
 
@@ -1446,7 +1491,7 @@ void	testListSortTwoNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<PmergeMe::Int> lst(arr, arr + arrSize);
 
@@ -1487,7 +1532,7 @@ void	testListSortThreeNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<int> lst(arr, arr + arrSize);
 
@@ -1513,7 +1558,7 @@ void	testListSortThreeNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<PmergeMe::Int> lst(arr, arr + arrSize);
 
@@ -1554,7 +1599,7 @@ void	testListSortFourNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<int> lst(arr, arr + arrSize);
 
@@ -1580,7 +1625,7 @@ void	testListSortFourNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<PmergeMe::Int> lst(arr, arr + arrSize);
 
@@ -1621,7 +1666,7 @@ void	testListSortFiveNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<int> lst(arr, arr + arrSize);
 
@@ -1647,7 +1692,7 @@ void	testListSortFiveNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<PmergeMe::Int> lst(arr, arr + arrSize);
 
@@ -1688,7 +1733,7 @@ void	testListSortTenNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<int> lst(arr, arr + arrSize);
 
@@ -1714,7 +1759,7 @@ void	testListSortTenNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<PmergeMe::Int> lst(arr, arr + arrSize);
 
@@ -1755,7 +1800,7 @@ void	testListSortThreeThousandNumbers(std::size_t testIndex)
 	PmergeMe pm;
 
 	{
-		std::cout << "MergeInsertion Sort" << std::endl;
+		std::cout << "\033[33mMergeInsertion Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<int> lst(arr, arr + arrSize);
 
@@ -1781,7 +1826,7 @@ void	testListSortThreeThousandNumbers(std::size_t testIndex)
 	}
 
 	{
-		std::cout << "Builtin Sort" << std::endl;
+		std::cout << "\033[33mBuiltin Sort\033[0m" << std::endl;
 		PmergeMe::Int::nComps = 0;
 		std::list<PmergeMe::Int> lst(arr, arr + arrSize);
 

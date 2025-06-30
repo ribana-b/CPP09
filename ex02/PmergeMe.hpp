@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 10:33:03 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/30 13:35:43 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/30 14:16:25 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,10 @@ class PmergeMe
 		static std::deque<int>	getDequeFromInput(const std::string& input);
 		static std::list<int>	getListFromInput(const std::string& input);
 
+		static bool	isSorted(std::vector<int>& sequence);
+		static bool	isSorted(std::deque<int>& sequence);
+		static bool	isSorted(std::list<int>& sequence);
+
 		void	sort(std::vector<int>& sequence);
 		void	sort(std::deque<int>& sequence);
 		void	sort(std::list<int>& sequence);
@@ -63,6 +67,10 @@ class PmergeMe
 
 				operator int() const;
 		};
+
+		static bool	isSorted(std::vector<Int>& sequence);
+		static bool	isSorted(std::deque<Int>& sequence);
+		static bool	isSorted(std::list<Int>& sequence);
 
 		typedef std::vector<Int>::iterator	VecIterator;
 		typedef std::vector<VecIterator>	VecPair;

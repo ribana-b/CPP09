@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 10:32:08 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2025/06/29 08:03:48 by ribana-b         ###   ########.com      */
+/*   Updated: 2025/06/30 14:17:10 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -746,6 +746,150 @@ void	PmergeMe::sort(std::list<int>& sequence)
 		++sequenceIt;
 		++newSequenceIt;
 	}
+}
+
+bool	PmergeMe::isSorted(std::vector<int>& sequence)
+{
+	if (sequence.size() < 2)
+	{
+		return (true);
+	}
+
+	std::vector<int>::iterator it = sequence.begin();
+	std::vector<int>::iterator prev = it;
+
+	++it;
+	while (it != sequence.end())
+	{
+		if (*prev > *it)
+		{
+			return (false);
+		}
+		prev = it;
+		++it;
+	}
+
+	return (true);
+}
+
+bool	PmergeMe::isSorted(std::deque<int>& sequence)
+{
+	if (sequence.size() < 2)
+	{
+		return (true);
+	}
+
+	std::deque<int>::iterator it = sequence.begin();
+	std::deque<int>::iterator prev = it;
+
+	++it;
+	while (it != sequence.end())
+	{
+		if (*prev > *it)
+		{
+			return (false);
+		}
+		prev = it;
+		++it;
+	}
+
+	return (true);
+}
+
+bool	PmergeMe::isSorted(std::list<int>& sequence)
+{
+	if (sequence.size() < 2)
+	{
+		return (true);
+	}
+
+	std::list<int>::iterator it = sequence.begin();
+	std::list<int>::iterator prev = it;
+
+	++it;
+	while (it != sequence.end())
+	{
+		if (*prev > *it)
+		{
+			return (false);
+		}
+		prev = it;
+		++it;
+	}
+
+	return (true);
+}
+
+bool	PmergeMe::isSorted(std::vector<Int>& sequence)
+{
+	if (sequence.size() < 2)
+	{
+		return (true);
+	}
+
+	std::vector<Int>::iterator it = sequence.begin();
+	std::vector<Int>::iterator prev = it;
+
+	++it;
+	while (it != sequence.end())
+	{
+		if (*prev > *it)
+		{
+			return (false);
+		}
+		prev = it;
+		++it;
+	}
+
+	return (true);
+}
+
+bool	PmergeMe::isSorted(std::deque<Int>& sequence)
+{
+	if (sequence.size() < 2)
+	{
+		return (true);
+	}
+
+	std::deque<Int>::iterator it = sequence.begin();
+	std::deque<Int>::iterator prev = it;
+
+	++it;
+	while (it != sequence.end())
+	{
+		if (*prev > *it)
+		{
+			return (false);
+		}
+		prev = it;
+		++it;
+	}
+
+	return (true);
+}
+
+bool	PmergeMe::isSorted(std::list<Int>& sequence)
+{
+	if (sequence.size() < 2)
+	{
+		return (true);
+	}
+
+	std::list<Int>::iterator it = sequence.begin();
+	std::list<Int>::iterator prev = it;
+
+	++it;
+	while (it != sequence.end())
+	{
+		if (*prev > *it)
+		{
+			return (false);
+		}
+		prev = it;
+		++it;
+	}
+
+	return (true);
 }
 
 std::size_t PmergeMe::Int::nComps = 0;
